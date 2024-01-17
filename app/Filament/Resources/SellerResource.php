@@ -4,6 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\SellerResource\Pages;
 use App\Filament\Resources\SellerResource\RelationManagers;
+use App\Models\Organization;
+use App\Models\Role;
 use Filament\Forms;
 use App\Models\User;
 use Filament\Forms\Form;
@@ -19,6 +21,7 @@ class SellerResource extends Resource
 
     protected static ?string $model = User::class;
 
+    protected static bool $isGloballySearchable = false;
     protected static ?string $recordTitleAttribute = 'Seller';
     protected static ?string $navigationGroup = 'Reseller';
     protected static ?string $label = 'Seller';
@@ -36,6 +39,13 @@ class SellerResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $organizationOptions = Organization::query()
+            ->first();
+        $roleOptions = Role::query()
+            ->where('code', 'seller')
+            ->first();
+
+
         return $form
             ->schema([
                 Forms\Components\Section::make()->schema([
@@ -46,6 +56,17 @@ class SellerResource extends Resource
                         ->email()
                         ->required()
                         ->maxLength(255),
+                    Forms\Components\TextInput::make('password')
+                        ->password()
+                        // ->revealable()
+                        ->required()
+                        ->rules(['min:6']),
+                    Forms\Components\TextInput::make('role_id')
+                        ->readonly()
+                        ->default('ed9ae8e7-93ce-466e-a488-58735d7efc84'),
+                    Forms\Components\TextInput::make('organization_id')
+                        ->readonly()
+                        ->default('9b177f37-bf19-49f1-8fce-5373ebd013fc'),
                 ])->columnSpanFull()
             ]);
     }
@@ -54,7 +75,15 @@ class SellerResource extends Resource
     {
         return $table
             ->columns([
-
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('email')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('organization.name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
             ])
             ->filters([
                 //

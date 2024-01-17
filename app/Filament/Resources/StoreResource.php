@@ -20,7 +20,7 @@ class StoreResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-s-building-storefront';
 
     protected static ?string $navigationGroup = 'Master';
-
+    protected static bool $isGloballySearchable = false;
     protected static ?string $navigationParentItem = 'Organizations';
 
     public static function form(Form $form): Form

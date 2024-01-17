@@ -19,6 +19,8 @@ class OrganizationResource extends Resource
 
     protected static ?string $navigationGroup = 'Master';
 
+    protected static bool $isGloballySearchable = false;
+
     protected static ?string $navigationIcon = 'heroicon-s-identification';
 
     public static function form(Form $form): Form

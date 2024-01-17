@@ -10,6 +10,11 @@ class EditSeller extends EditRecord
 {
     protected static string $resource = SellerResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
     protected function getHeaderActions(): array
     {
         return [

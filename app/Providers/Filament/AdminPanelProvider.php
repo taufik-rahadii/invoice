@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Models\Organization;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -16,20 +17,28 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        $organization = Organization::query()->first();
+        $brandName = $organization->name;
         return $panel
             ->default()
             ->id('admin')
             ->path('admin')
             ->login()
+            ->registration()
+            ->profile()
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->brandName($organization->name)
+            ->brandLogo(asset('storage/' . $organization->logo))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
