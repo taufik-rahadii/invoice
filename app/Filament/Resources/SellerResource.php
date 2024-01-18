@@ -58,14 +58,18 @@ class SellerResource extends Resource
                         ->maxLength(255),
                     Forms\Components\TextInput::make('password')
                         ->password()
-                        // ->revealable()
                         ->required()
                         ->rules(['min:6']),
-                    Forms\Components\TextInput::make('role_id')
-                        ->readonly()
-                        ->default('ed9ae8e7-93ce-466e-a488-58735d7efc84'),
-                    Forms\Components\TextInput::make('organization_id')
-                        ->readonly()
+                    // Forms\Components\TextInput::make('role_id')
+                    //     ->readonly()
+                    //     ->default('ed9ae8e7-93ce-466e-a488-58735d7efc84'),
+                    Forms\Components\Select::make('role_id')
+                        ->options(Role::where('id', 'ed9ae8e7-93ce-466e-a488-58735d7efc84')->pluck('name', 'id'))
+                        ->default('ed9ae8e7-93ce-466e-a488-58735d7efc84')
+                        ->label('Role'),
+                    Forms\Components\Select::make('organization_id')
+                        ->label('Brand / Perusahaan')
+                        ->options(Organization::where('id', '9b177f37-bf19-49f1-8fce-5373ebd013fc')->pluck('name', 'id'))
                         ->default('9b177f37-bf19-49f1-8fce-5373ebd013fc'),
                 ])->columnSpanFull()
             ]);
